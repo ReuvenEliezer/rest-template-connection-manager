@@ -1,0 +1,12 @@
+spring:
+  mvc:
+    path match:
+      matching-strategy: ant-path-matcher #https://stackoverflow.com/questions/70036953/springboot-2-6-0-spring-fox-3-failed-to-start-bean-documentationpluginsboot
+  server:
+    port: 8080
+  output:
+    ansi:
+      enabled: always
+logging:
+  pattern:
+    level: "%5p [${spring.application.name:}, %X{traceId:-}, %X{spanId:-}]"
