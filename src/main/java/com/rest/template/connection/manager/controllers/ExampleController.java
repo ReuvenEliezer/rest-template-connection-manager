@@ -17,7 +17,7 @@ public class ExampleController {
     public String restTemplateTimeOut() {
         logger.info("ok");
         try {
-            Thread.sleep(Duration.ofMillis(20).toMillis());
+            Thread.sleep(Duration.ofMillis(200).toMillis());
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }

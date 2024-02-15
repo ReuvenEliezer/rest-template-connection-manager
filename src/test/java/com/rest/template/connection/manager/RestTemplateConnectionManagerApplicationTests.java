@@ -1,6 +1,7 @@
 package com.rest.template.connection.manager;
 
 import org.apache.hc.client5.http.classic.HttpClient;
+import org.apache.hc.client5.http.config.ConnectionConfig;
 import org.apache.hc.client5.http.config.RequestConfig;
 import org.apache.hc.client5.http.impl.classic.CloseableHttpClient;
 import org.apache.hc.client5.http.impl.classic.HttpClientBuilder;
@@ -8,6 +9,7 @@ import org.apache.hc.client5.http.impl.io.BasicHttpClientConnectionManager;
 import org.apache.hc.client5.http.impl.io.PoolingHttpClientConnectionManager;
 import org.apache.hc.client5.http.impl.io.PoolingHttpClientConnectionManagerBuilder;
 import org.apache.hc.client5.http.io.HttpClientConnectionManager;
+import org.apache.hc.core5.util.Timeout;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -80,6 +82,7 @@ class RestTemplateConnectionManagerApplicationTests {
 
     private void initRestTemplateWithPoolingHttpClientConnectionManager() {
         PoolingHttpClientConnectionManager connectionManager = PoolingHttpClientConnectionManagerBuilder.create()
+                .setDefaultConnectionConfig(createConnectionConfig())
                 .setMaxConnTotal(100)
                 .setMaxConnPerRoute(20)
                 .build();
@@ -94,22 +97,22 @@ class RestTemplateConnectionManagerApplicationTests {
 
     private void initRestTemplateWithHttpClientConnectionManager() {
         BasicHttpClientConnectionManager connectionManager = new BasicHttpClientConnectionManager();
-        CloseableHttpClient httpClient = buildHttpClient(connectionManager);
+        connectionManager.setConnectionConfig(createConnectionConfig());
+        HttpClient httpClient = buildHttpClient(connectionManager);
         initRestTemplateWithHttpClientConnectionManager(httpClient);
     }
 
-    private static RequestConfig createReqConfig() {
-        return RequestConfig.custom()
-                .setConnectionRequestTimeout(0, TimeUnit.MILLISECONDS) // timeout to get connection from pool
-                .setConnectTimeout(5000, TimeUnit.MILLISECONDS) // standard connection timeout
-                .build();
-    }
-
-    private static CloseableHttpClient buildHttpClient(HttpClientConnectionManager connectionManager) {
+    private static HttpClient buildHttpClient(HttpClientConnectionManager connectionManager) {
         return HttpClientBuilder
                 .create()
                 .setConnectionManager(connectionManager)
-                .setDefaultRequestConfig(createReqConfig())
+                .build();
+    }
+
+    private ConnectionConfig createConnectionConfig() {
+        return ConnectionConfig.custom()
+                .setConnectTimeout(Timeout.of(Duration.ofMillis(0)))// timeout to get connection from pool
+                .setSocketTimeout(Timeout.of(Duration.ofSeconds(5))) // standard connection timeout
                 .build();
     }
 
