@@ -47,14 +47,18 @@ public class WebRestConfig {
     @Bean
     @Primary
     public RestTemplate restTemplateWithPoolManager() {
-        PoolingHttpClientConnectionManager connectionManager = PoolingHttpClientConnectionManagerBuilder.create()
+        HttpClient httpClient = buildHttpClient(poolingHttpClientConnectionManager());
+        ClientHttpRequestFactory requestFactory = new HttpComponentsClientHttpRequestFactory(httpClient);
+        return new RestTemplate(requestFactory);
+    }
+
+    @Bean
+    public PoolingHttpClientConnectionManager poolingHttpClientConnectionManager() {
+        return PoolingHttpClientConnectionManagerBuilder.create()
                 .setDefaultConnectionConfig(createConnectionConfig())
                 .setMaxConnTotal(maxConnTotal)
                 .setMaxConnPerRoute(maxConnPerRoute)
                 .build();
-        HttpClient httpClient = buildHttpClient(connectionManager);
-        ClientHttpRequestFactory requestFactory = new HttpComponentsClientHttpRequestFactory(httpClient);
-        return new RestTemplate(requestFactory);
     }
 
     @Bean //one thread
