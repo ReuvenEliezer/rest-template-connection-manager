@@ -1,8 +1,8 @@
 package com.rest.template.connection.manager.controllers;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.hc.client5.http.impl.io.PoolingHttpClientConnectionManager;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -13,7 +13,7 @@ import java.time.Duration;
 @RestController
 @RequestMapping("/")
 public class ExampleController {
-    private static final Log logger = LogFactory.getLog(ExampleController.class);
+    private static final Logger logger = LogManager.getLogger(ExampleController.class);
 
     private final PoolingHttpClientConnectionManager poolingHttpClientConnectionManager;
 

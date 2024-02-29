@@ -1,5 +1,6 @@
 package com.rest.template.connection.manager;
 
+import com.rest.template.connection.manager.controllers.ExampleController;
 import org.apache.hc.client5.http.classic.HttpClient;
 import org.apache.hc.client5.http.config.ConnectionConfig;
 import org.apache.hc.client5.http.config.RequestConfig;
@@ -10,9 +11,9 @@ import org.apache.hc.client5.http.impl.io.PoolingHttpClientConnectionManager;
 import org.apache.hc.client5.http.impl.io.PoolingHttpClientConnectionManagerBuilder;
 import org.apache.hc.client5.http.io.HttpClientConnectionManager;
 import org.apache.hc.core5.util.Timeout;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.junit.jupiter.api.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
@@ -37,7 +38,8 @@ class RestTemplateConnectionManagerApplicationTests {
     /**
      * https://stackoverflow.com/questions/14866362/invalid-use-of-basicclientconnmanager-connection-still-allocated
      */
-    private static final Logger logger = LoggerFactory.getLogger(RestTemplateConnectionManagerApplication.class);
+    private static final Logger logger = LogManager.getLogger(RestTemplateConnectionManagerApplication.class);
+
     private static final String localhost = "http://localhost:";
 
     @Value("${spring.server.port}")
